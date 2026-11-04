@@ -2,250 +2,318 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#e6eee5">
-<meta name="description" content="A gentle planner for tasks, thoughts and calmer days.">
 <link rel="manifest" href="./manifest.json">
 <title>Calm & Control</title>
 <style>
-:root{--green:#526d5a;--soft:#e5ede4;--bg:#f8f8f3;--ink:#293b31;--muted:#77847a;--line:#e7e9e1}
+:root{--bg:#f8f8f3;--ink:#293b31;--green:#526d5a;--soft:#e5ede4;--line:#e7e9e1}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,sans-serif}
 button,input,textarea,select{font:inherit}
 button{cursor:pointer}
-.app{max-width:700px;margin:auto;padding:22px 17px 45px}
-header{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;letter-spacing:1.5px;font-weight:700;margin:8px 0 20px}
-.hero{background:var(--soft);border-radius:23px;padding:25px}
-.eyebrow{font-size:10px;letter-spacing:2px;color:#627b68;font-weight:800}
-h1{font:normal 37px/1.12 Georgia,serif;color:#304638;margin:13px 0}
-.hero p{font-size:13px;line-height:1.7;color:#5d7062}
+.app{max-width:760px;margin:auto;padding:22px;padding-bottom:40px}
+.top,.split{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.brand{font-size:11px;letter-spacing:2px;font-weight:800;color:#77847a}
+.date,.hint,.meta{font-size:11px;color:#77847a}
+.hero{background:var(--soft);border-radius:22px;padding:24px;margin:18px 0}
+.eyebrow{font-size:10px;letter-spacing:2px;font-weight:800;color:#627b68}
+h1{font:500 36px/1.15 Georgia,serif;color:#304638;margin:10px 0}
+.hero p,.calmcard p{font-size:13px;line-height:1.6;color:#5d7062}
 .mantra{font:italic 17px Georgia,serif;color:#526b57;margin-top:18px}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:14px 0}
-.stat,.panel{background:white;border:1px solid var(--line);border-radius:16px;padding:15px}
+.stat,.panel,.progressbox{background:white;border:1px solid var(--line);border-radius:16px;padding:15px;margin:12px 0}
 .stat{text-align:center}
 .stat b{display:block;font-size:23px;color:var(--green)}
-.stat span{font-size:10px;color:var(--muted)}
-.progress{height:7px;background:#edf0e9;border-radius:20px;margin-top:12px;overflow:hidden}
-.bar{height:100%;width:0;background:#78947b}
-.tabs{display:flex;gap:7px;margin:17px 0;overflow:auto}
-.tab{flex:1;white-space:nowrap;border:0;border-radius:11px;padding:12px 8px;background:#eceee7;color:#6b796d;font-size:12px;font-weight:700}
-.tab.active,.primary{background:var(--green);color:white}
-.panel{margin:13px 0}
-h2{font-size:15px;margin:0 0 6px}
-.hint{font-size:11px;color:var(--muted);line-height:1.6;margin:0 0 13px}
-.field{width:100%;border:1px solid #e2e7df;border-radius:11px;padding:12px;background:white;color:#304438;font-size:13px;margin:4px 0;outline:none}
-textarea.field{min-height:145px;resize:vertical;line-height:1.7}
+.stat span{font-size:10px;color:#77847a}
+.progress-track{height:7px;background:#edf0e9;border-radius:20px;margin-top:10px;overflow:hidden}
+.progress-fill{height:100%;background:#78947b;width:0}
+.tabs,.segments{display:flex;gap:7px;margin:15px 0;overflow:auto}
+.tab,.segment{flex:1;white-space:nowrap;border:0;border-radius:11px;padding:11px 8px;background:#eceee7;color:#6b796d;font-size:12px;font-weight:700}
+.tab.active,.segment.active{background:var(--green);color:white}
+.view[hidden]{display:none}
+.panel h2{font-size:15px;margin:0 0 6px}
+.hint{line-height:1.5;margin:0 0 13px}
+.field{width:100%;border:1px solid #e2e7df;border-radius:11px;padding:12px;background:white;color:#304438;font-size:13px;margin:4px 0}
+textarea.field{min-height:150px;line-height:1.6;resize:vertical}
 .row{display:flex;gap:8px}
 .row>*{flex:1;min-width:0}
 .btn{border:0;border-radius:11px;padding:12px 14px;font-size:12px;font-weight:750}
+.primary{background:var(--green);color:white}
 .secondary{background:#edf2eb;color:#4d6853}
-.full{width:100%;margin-top:9px}
-.task{display:flex;align-items:flex-start;gap:9px;padding:12px 0;border-bottom:1px solid #f0f1eb}
-.task:last-child{border:0}
-.tick{width:22px;height:22px;flex:0 0 22px;border:1px solid #a8b7a7;border-radius:7px;background:white;color:white}
-.tick.done{background:#6d896f;color:white}
+.full{width:100%;margin-top:10px}
+.task{display:flex;align-items:flex-start;gap:10px;padding:12px 0;border-bottom:1px solid #f0f1eb}
+.tick{height:22px;width:22px;flex:0 0 22px;border:1.5px solid #a8b7a7;background:white;border-radius:7px;color:white;padding:0}
+.tick.done{background:#6d896f;border-color:#6d896f}
 .taskbody{flex:1;min-width:0}
-.taskname{font-size:13px;font-weight:650;overflow-wrap:anywhere}
-.doneText{text-decoration:line-through;color:#9ca69d}
-.meta{font-size:10px;color:#8b958b;margin-top:5px}
+.taskname{font-size:13px;font-weight:650;line-height:1.4;overflow-wrap:anywhere}
+.taskname.done{text-decoration:line-through;color:#9ca69d}
+.meta{margin-top:5px}
 .tag{display:inline-block;border-radius:20px;padding:3px 8px;font-size:9px;background:#f0f2ec;color:#6c796d;margin-top:5px}
 .urgent{background:#f8eae4;color:#a15e49}
 .important{background:#eaf1e8;color:#55745a}
-.action{border:0;background:transparent;color:#7d8c7f;padding:5px;font-size:17px}
-.empty{text-align:center;padding:20px 5px;color:#8b968c;font-size:12px;line-height:1.7}
-.note{font-size:12px;line-height:1.8;background:#f5f5ef;border-radius:12px;padding:14px;color:#637266}
-.calm{background:#f0eee5;border-radius:17px;padding:22px;text-align:center}
-.calm h2{font:normal 24px Georgia,serif;color:#49614e;margin:12px}
-.calm p{font-size:12px;line-height:1.7;color:#6d796e}
-.breath{width:100px;height:100px;border-radius:50%;background:#dce9df;margin:24px auto;display:grid;place-items:center;color:#47634e;font:15px Georgia,serif}
-[hidden]{display:none!important}
-footer{text-align:center;font-size:10px;color:#98a197;padding:22px 0}
+.delete{border:0;background:transparent;color:#9aa39a;padding:5px}
+.empty{text-align:center;padding:22px 8px;color:#8b968c;font-size:12px;line-height:1.6}
+.smallselect{width:auto;padding:7px;font-size:11px}
+.note{font-size:12px;line-height:1.7;background:#f5f5ef;border-radius:12px;padding:13px;color:#637266}
+.calmcard{background:#f0eee5;border-radius:17px;padding:20px;text-align:center}
+.calmcard h2{font:500 23px Georgia,serif;color:#49614e}
+.breath{width:100px;height:100px;border-radius:50%;background:#dce9df;margin:23px auto;display:grid;place-items:center;color:#47634e;font:14px Georgia,serif;transition:transform 3s}
+.breath.grow{transform:scale(1.2)}
+.footer{text-align:center;font-size:10px;color:#98a197;padding:22px 0}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#304638;color:white;padding:10px 16px;border-radius:22px;font-size:12px;opacity:0;pointer-events:none}
+.toast.show{opacity:1}
 </style>
 </head>
 <body>
 <main class="app">
-<header><span>CALM & CONTROL</span><span id="date"></span></header>
+<header class="top">
+<div class="brand">CALM & CONTROL</div>
+<div class="date" id="todaydate"></div>
+</header>
 
 <section class="hero">
 <div class="eyebrow">YOUR SPACE · ONE DAY AT A TIME</div>
 <h1>A gentler way<br>to get things done.</h1>
-<p>You don't have to carry every task in your head. Put it here, choose what matters next, and let the rest wait.</p>
+<p>You don't have to carry every task in your head. Choose what matters next, and let the rest wait.</p>
 <div class="mantra">“I can take my time. One step is enough.”</div>
 </section>
 
 <section class="stats">
 <div class="stat"><b id="remaining">0</b><span>Still to do</span></div>
 <div class="stat"><b id="completed">0</b><span>Completed</span></div>
-<div class="stat"><b id="focusCount">0/3</b><span>Today's focus</span></div>
+<div class="stat"><b id="focuscount">0/3</b><span>Today's focus</span></div>
 </section>
 
-<section class="panel">
-<strong style="font-size:13px">Your progress</strong>
-<span id="progressLabel" style="float:right;font-size:11px;color:var(--muted)">A fresh start.</span>
-<div class="progress"><div class="bar" id="progressBar"></div></div>
+<section class="progressbox">
+<div class="split"><strong style="font-size:13px">Your progress</strong><span id="progresslabel" class="hint">A fresh start.</span></div>
+<div class="progress-track"><div class="progress-fill" id="progressbar"></div></div>
 </section>
 
 <nav class="tabs">
-<button class="tab active" data-tab="tasks">My tasks</button>
-<button class="tab" data-tab="brain">Brain dump</button>
-<button class="tab" data-tab="calm">Calm corner</button>
+<button class="tab active" data-view="tasks">My tasks</button>
+<button class="tab" data-view="brain">Brain dump</button>
+<button class="tab" data-view="calm">Calm corner</button>
 </nav>
 
-<section id="tasks">
+<section class="view" id="tasks">
 <div class="panel">
-<h2>Get it out of your head</h2>
-<p class="hint">Add a task. Decide when it needs your attention.</p>
-<form id="taskForm">
-<input class="field" id="taskInput" maxlength="160" placeholder="e.g. Book dentist appointment" required>
+<h2>Add a task</h2>
+<p class="hint">Choose whether it belongs to your job or personal life.</p>
+<form id="taskform">
+<input class="field" id="taskinput" maxlength="160" placeholder="What do you need to do?" required>
 <div class="row">
-<select class="field" id="priority"><option>Normal</option><option>Important</option><option>Urgent</option></select>
-<select class="field" id="when"><option>Today</option><option>This week</option><option>Someday</option></select>
+<select class="field" id="category">
+<option value="Personal">Personal</option>
+<option value="Work">Work</option>
+</select>
+<select class="field" id="priority">
+<option>Normal</option><option>Important</option><option>Urgent</option>
+</select>
 </div>
-<button class="btn primary full">＋ Add task</button>
+<select class="field" id="when">
+<option>Today</option><option>This week</option><option>Someday</option>
+</select>
+<button class="btn primary full" type="submit">＋ Add task</button>
 </form>
 </div>
 
 <div class="panel">
-<h2>My three priorities</h2>
-<p class="hint">Choose up to three tasks. The rest can wait.</p>
-<div id="focusList"></div>
+<h2>Separate task lists</h2>
+<p class="hint">Switch between your work and personal responsibilities.</p>
+<div class="segments" id="tasksegments">
+<button class="segment active" data-category="All">All</button>
+<button class="segment" data-category="Work">Work</button>
+<button class="segment" data-category="Personal">Personal</button>
 </div>
-
-<div class="panel">
-<h2>All my tasks</h2>
-<select class="field" id="filter">
-<option value="all">All tasks</option><option>Today</option><option>This week</option><option>Someday</option><option value="done">Completed</option>
+<div class="split">
+<h2>My tasks</h2>
+<select id="filter" class="field smallselect">
+<option value="all">All dates</option>
+<option value="Today">Today</option>
+<option value="This week">This week</option>
+<option value="Someday">Someday</option>
+<option value="done">Completed</option>
 </select>
-<div id="taskList"></div>
-<button class="btn secondary full" id="clearDone">Clear completed tasks</button>
+</div>
+<div id="tasklist"></div>
+<button class="btn secondary full" id="clearDone" type="button">Clear completed tasks</button>
 </div>
 
 <div class="panel">
-<h2>Your personal backup</h2>
-<p class="hint">Export your tasks and notes to a file you can keep safely.</p>
-<button class="btn secondary full" id="export">Export my data</button>
+<h2>Today's focus</h2>
+<p class="hint">Your selected focus tasks will appear here.</p>
+<div id="focuslist" class="empty">Your focus list is ready.</div>
 </div>
-</section>
 
-<section id="brain" hidden>
 <div class="panel">
-<h2>Empty your mind</h2>
-<p class="hint">Worries, reminders, ideas and unfinished thoughts. It doesn't have to be organised.</p>
-<textarea class="field" id="brainText" placeholder="I'm worried about…&#10;I need to remember…&#10;I keep thinking about…"></textarea>
-<p class="hint" id="saveStatus">Your notes save automatically on this device.</p>
+<button class="btn secondary full" id="export" type="button">Export backup of my data</button>
 </div>
-<div class="note"><strong>A gentle reminder</strong><br>Writing something down does not mean you must act on it immediately. Some things are just thoughts. Some can wait. You do not have to solve everything today.</div>
 </section>
 
-<section id="calm" hidden>
-<div class="calm">
+<section class="view" id="brain" hidden>
+<div class="panel">
+<h2>Separate Brain Dumps</h2>
+<p class="hint">Your work thoughts and personal thoughts are saved separately.</p>
+<div class="segments" id="notetabs">
+<button class="segment active" data-notes="Personal">Personal</button>
+<button class="segment" data-notes="Work">Work</button>
+</div>
+<textarea class="field" id="braintext" placeholder="Write anything on your mind..."></textarea>
+<button class="btn primary full" id="savebrain" type="button">Save my thoughts</button>
+<p id="savedstatus" class="hint">Your notes are saved on this device.</p>
+</div>
+<div class="note"><strong>A gentle reminder</strong><br>Writing something down does not mean you must act on it immediately. Some things can wait.</div>
+</section>
+
+<section class="view" id="calm" hidden>
+<div class="calmcard">
 <div class="eyebrow">A MOMENT FOR YOU</div>
 <h2>You are allowed to slow down.</h2>
-<p>Pause for a moment. Relax your shoulders. Notice your feet touching the floor. Let your breathing happen naturally.</p>
-<div class="breath" id="breath">Pause</div>
-<div id="calmText" style="font-size:12px;color:#68776b">No rush. You are here.</div>
-<button class="btn primary" id="pauseButton" style="margin-top:16px">Start one-minute pause</button>
+<p>Try a gentle one-minute pause. Keep breathing naturally; stop if uncomfortable.</p>
+<div class="breath" id="breath">Ready</div>
+<div id="breathlabel" class="hint">No rush. Start when you're ready.</div>
+<button class="btn primary" id="breathbutton">Start one-minute pause</button>
 </div>
 <div class="panel">
 <h2>Read this when you feel rushed</h2>
 <p style="font:italic 19px/1.6 Georgia,serif;color:#526b57">“I do not need to finish my entire life today. I only need to choose my next small step.”</p>
-<div class="note">Ask yourself: Is this genuinely urgent, or am I feeling anxious because it isn't finished yet?</div>
-</div>
-<div class="panel">
-<h2>Permission to be human</h2>
-<p class="hint">✓ I can postpone something without failing.</p>
-<p class="hint">✓ I can finish one task at a time.</p>
-<p class="hint">✓ Rest is not wasted time.</p>
-<p class="hint">✓ My worth is not measured by productivity.</p>
+<div class="note">Rest is not wasted time. Your worth is not measured by productivity.</div>
 </div>
 </section>
 
-<footer>A gentle life is still a productive life. 🌿<br>Your planner is stored in this browser on this device.</footer>
+<footer class="footer">A gentle life is still a productive life. 🌿<br>Your planner is stored in this browser on this device.</footer>
 </main>
+<div class="toast" id="toast"></div>
 
 <script>
 (()=>{
 const $=id=>document.getElementById(id);
-let tasks=[],notes="",pauseTimer=null,pauseSeconds=60;
-try{tasks=JSON.parse(localStorage.getItem("cc_tasks")||"[]");notes=localStorage.getItem("cc_notes")||""}catch(e){}
-$("date").textContent=new Intl.DateTimeFormat(undefined,{weekday:"short",month:"short",day:"numeric"}).format(new Date());
-$("brainText").value=notes;
+let tasks=[],notesPersonal='',notesWork='',selectedCategory='All',selectedNotes='Personal',timer=null;
+try{
+tasks=JSON.parse(localStorage.getItem('cc_tasks')||'[]');
+tasks=tasks.map(t=>({...t,category:t.category||'Personal'}));
+notesPersonal=localStorage.getItem('cc_notes_personal')||localStorage.getItem('cc_notes')||'';
+notesWork=localStorage.getItem('cc_notes_work')||'';
+}catch(e){}
+$('todaydate').textContent=new Intl.DateTimeFormat(undefined,{weekday:'short',month:'short',day:'numeric'}).format(new Date());
+$('braintext').value=notesPersonal;
 
-function save(){
- try{localStorage.setItem("cc_tasks",JSON.stringify(tasks));localStorage.setItem("cc_notes",notes)}
- catch(e){alert("Storage is unavailable. Please export your data if possible.")}
+const persist=()=>{
+try{
+localStorage.setItem('cc_tasks',JSON.stringify(tasks));
+localStorage.setItem('cc_notes_personal',notesPersonal);
+localStorage.setItem('cc_notes_work',notesWork);
+}catch(e){notify('Browser storage is unavailable.');}
+};
+function notify(s){
+const t=$('toast');t.textContent=s;t.classList.add('show');
+setTimeout(()=>t.classList.remove('show'),2200);
 }
-function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function taskHTML(t){
- return `<div class="task">
- <button class="tick ${t.done?"done":""}" data-action="toggle" data-id="${t.id}">${t.done?"✓":""}</button>
- <div class="taskbody">
- <div class="taskname ${t.done?"doneText":""}">${escapeHTML(t.name)}</div>
- <div class="meta">${escapeHTML(t.when)} · ${escapeHTML(t.priority)}</div>
- <span class="tag ${t.priority==="Urgent"?"urgent":t.priority==="Important"?"important":""}">${escapeHTML(t.priority)}</span>
- </div>
- <button class="action" data-action="focus" data-id="${t.id}" title="Toggle today's focus">${t.focus?"★":"☆"}</button>
- <button class="action" data-action="delete" data-id="${t.id}" title="Delete">×</button>
- </div>`;
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function row(t){
+return `<div class="task">
+<button class="tick ${t.done?'done':''}" data-act="toggle" data-id="${t.id}">${t.done?'✓':''}</button>
+<div class="taskbody">
+<div class="taskname ${t.done?'done':''}" data-edit="${t.id}">${esc(t.name)}</div>
+<div class="meta">${esc(t.category)} · ${esc(t.when)} · ${esc(t.priority)}</div>
+<span class="tag ${t.priority==='Urgent'?'urgent':t.priority==='Important'?'important':''}">${esc(t.priority)}</span>
+</div>
+<button class="delete" data-act="delete" data-id="${t.id}">×</button>
+</div>`;
 }
 function render(){
- const open=tasks.filter(t=>!t.done),done=tasks.filter(t=>t.done),focus=open.filter(t=>t.focus);
- $("remaining").textContent=open.length;
- $("completed").textContent=done.length;
- $("focusCount").textContent=focus.length+"/3";
- const pct=tasks.length?Math.round(done.length/tasks.length*100):0;
- $("progressBar").style.width=pct+"%";
- $("progressLabel").textContent=tasks.length?pct+"% complete":"A fresh start.";
- $("focusList").innerHTML=focus.length?focus.map(taskHTML).join(""):'<div class="empty">Choose up to three tasks below as today’s focus. 🌱</div>';
- const f=$("filter").value;
- const shown=tasks.filter(t=>f==="all"||(f==="done"?t.done:t.when===f&&!t.done));
- $("taskList").innerHTML=shown.length?shown.map(taskHTML).join(""):'<div class="empty">Nothing here right now.<br>You have room to breathe.</div>';
+const open=tasks.filter(t=>!t.done),done=tasks.filter(t=>t.done);
+const focus=open.filter(t=>t.focus);
+$('remaining').textContent=open.length;
+$('completed').textContent=done.length;
+$('focuscount').textContent=focus.length+'/3';
+const pct=tasks.length?Math.round(done.length/tasks.length*100):0;
+$('progressbar').style.width=pct+'%';
+$('progresslabel').textContent=tasks.length?pct+'% complete':'A fresh start.';
+$('focuslist').innerHTML=focus.length?focus.map(row).join(''):'Your focus list is ready.';
+const f=$('filter').value;
+const shown=tasks.filter(t=>(selectedCategory==='All'||t.category===selectedCategory)&&(f==='all'||(f==='done'?t.done:t.when===f&&!t.done)));
+$('tasklist').innerHTML=shown.length?shown.map(row).join(''):'<div class="empty">Nothing here right now.<br>You have room to breathe.</div>';
 }
-$("taskForm").addEventListener("submit",e=>{
- e.preventDefault();
- const name=$("taskInput").value.trim();if(!name)return;
- tasks.unshift({id:Date.now().toString()+Math.random(),name,priority:$("priority").value,when:$("when").value,done:false,focus:false});
- $("taskInput").value="";save();render();
+$('taskform').addEventListener('submit',e=>{
+e.preventDefault();
+const name=$('taskinput').value.trim();if(!name)return;
+tasks.unshift({id:Date.now().toString()+Math.random().toString(16).slice(2),name,category:$('category').value,priority:$('priority').value,when:$('when').value,done:false,focus:false});
+$('taskinput').value='';persist();render();notify('Task added.');
 });
-$("filter").addEventListener("change",render);
-document.addEventListener("click",e=>{
- const b=e.target.closest("[data-action]");if(!b)return;
- const t=tasks.find(x=>x.id===b.dataset.id);if(!t)return;
- if(b.dataset.action==="toggle"){t.done=!t.done;if(t.done)t.focus=false}
- if(b.dataset.action==="delete")tasks=tasks.filter(x=>x.id!==t.id);
- if(b.dataset.action==="focus"){
-  if(!t.focus&&tasks.filter(x=>x.focus&&!x.done).length>=3){alert("You can choose only three focus tasks.");return}
-  t.focus=!t.focus;
- }
- save();render();
-});
-$("clearDone").addEventListener("click",()=>{
- tasks=tasks.filter(t=>!t.done);save();render();
-});
-document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{
- document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("active",x===b));
- ["tasks","brain","calm"].forEach(id=>$(id).hidden=id!==b.dataset.tab);
-}));
-$("brainText").addEventListener("input",()=>{
- notes=$("brainText").value;save();$("saveStatus").textContent="Saved on this device.";
-});
-$("export").addEventListener("click",()=>{
- const blob=new Blob([JSON.stringify({tasks,notes,exportedAt:new Date().toISOString()},null,2)],{type:"application/json"});
- const url=URL.createObjectURL(blob),a=document.createElement("a");
- a.href=url;a.download="calm-and-control-backup.json";a.click();URL.revokeObjectURL(url);
-});
-$("pauseButton").addEventListener("click",()=>{
- if(pauseTimer){clearInterval(pauseTimer);pauseTimer=null;$("pauseButton").textContent="Start one-minute pause";$("breath").textContent="Pause";$("calmText").textContent="No rush. You are here.";return}
- pauseSeconds=60;$("pauseButton").textContent="End pause";
- const tick=()=>{
-  if(pauseSeconds<=0){clearInterval(pauseTimer);pauseTimer=null;$("breath").textContent="Done";$("calmText").textContent="You made space for yourself. That is enough.";$("pauseButton").textContent="Start again";return}
-  $("breath").textContent=pauseSeconds+"s";$("calmText").textContent="Let your shoulders soften. Notice the room around you.";pauseSeconds--;
- };
- tick();pauseTimer=setInterval(tick,1000);
-});
+$('filter').addEventListener('change',render);
+$('tasksegments').addEventListener('click',e=>{
+const b=e.target.closest('[data-category]');if(!b)return;
+selectedCategory=b.dataset.category;
+document.querySelectorAll('#tasksegments .segment').forEach(x=>x.classList.toggle('active',x===b));
 render();
-if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js").catch(()=>{}))}
+});
+document.addEventListener('click',e=>{
+const b=e.target.closest('[data-act]');
+if(b){
+const t=tasks.find(x=>x.id===b.dataset.id);if(!t)return;
+if(b.dataset.act==='toggle'){t.done=!t.done;if(t.done)t.focus=false;}
+if(b.dataset.act==='delete')tasks=tasks.filter(x=>x.id!==t.id);
+persist();render();return;
+}
+const edit=e.target.closest('[data-edit]');
+if(edit){
+const t=tasks.find(x=>x.id===edit.dataset.edit);if(!t)return;
+const next=prompt('Edit this task:',t.name);
+if(next&&next.trim()){t.name=next.trim();persist();render();}
+}
+});
+$('clearDone').addEventListener('click',()=>{
+tasks=tasks.filter(t=>!t.done);persist();render();notify('Completed tasks cleared.');
+});
+function tab(v){
+document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
+document.querySelectorAll('.view').forEach(s=>s.hidden=s.id!==v);
+}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>tab(b.dataset.view)));
+
+function showNotes(){
+$('braintext').value=selectedNotes==='Work'?notesWork:notesPersonal;
+document.querySelectorAll('#notetabs .segment').forEach(b=>b.classList.toggle('active',b.dataset.notes===selectedNotes));
+$('savedstatus').textContent='Saved on this device.';
+}
+$('notetabs').addEventListener('click',e=>{
+const b=e.target.closest('[data-notes]');if(!b)return;
+selectedNotes=b.dataset.notes;showNotes();
+});
+$('braintext').addEventListener('input',()=>{
+if(selectedNotes==='Work')notesWork=$('braintext').value;
+else notesPersonal=$('braintext').value;
+persist();$('savedstatus').textContent='Saving as you type on this device…';
+});
+$('savebrain').addEventListener('click',()=>{
+persist();$('savedstatus').textContent='Saved. You can let these thoughts rest.';
+notify('Your thoughts are saved.');
+});
+$('export').addEventListener('click',()=>{
+const data={tasks,notesPersonal,notesWork,exportedAt:new Date().toISOString()};
+const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+const url=URL.createObjectURL(blob);
+const a=document.createElement('a');a.href=url;a.download='calm-control-backup.json';a.click();
+URL.revokeObjectURL(url);notify('Backup export started.');
+});
+$('breathbutton').addEventListener('click',()=>{
+if(timer){clearInterval(timer);timer=null;$('breathbutton').textContent='Start one-minute pause';$('breath').classList.remove('grow');$('breath').textContent='Ready';$('breathlabel').textContent='Pause whenever you need.';return;}
+let n=60,phase=0;
+function tick(){
+if(n<=0){clearInterval(timer);timer=null;$('breathbutton').textContent='Start again';$('breath').classList.remove('grow');$('breath').textContent='Done';$('breathlabel').textContent='You made space for yourself. That is enough.';return;}
+const inhale=phase%2===0;
+$('breath').textContent=inhale?'Breathe in':'Breathe out';
+$('breathlabel').textContent=inhale?'Breathe in gently':'Breathe out slowly';
+$('breath').classList.toggle('grow',inhale);
+phase++;n-=5;
+}
+$('breathbutton').textContent='End pause';tick();timer=setInterval(tick,5000);
+});
+showNotes();render();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
 })();
 </script>
 </body>
