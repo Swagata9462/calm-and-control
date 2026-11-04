@@ -1,4 +1,4 @@
-const CACHE_NAME = "calm-control-v1";
+const CACHE_NAME = "calm-control-v2";
 
 const ASSETS = [
   "./",
