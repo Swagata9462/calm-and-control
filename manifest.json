@@ -1,0 +1,10 @@
+{
+  "name": "Calm & Control",
+  "short_name": "Calm",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f8f8f3",
+  "theme_color": "#e6eee5",
+  "description": "A gentle planner for tasks, thoughts and calmer days."
+}
